@@ -2,7 +2,7 @@
 %define fname wxGTK
 %define majorminor	2.8
 %define name		wxgtk%majorminor
-%define version 2.8.2
+%define version 2.8.4
 %define	major		%majorminor
 %define release %mkrel 1
 
@@ -412,5 +412,3 @@ fi
 %files -n %{libglu}
 %defattr(-,root,root,-)
 %{_libdir}/libwx_gtk2u_gl-%majorminor.so.*
-
-
