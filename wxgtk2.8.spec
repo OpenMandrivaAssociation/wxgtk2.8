@@ -4,12 +4,14 @@
 %define name		wxgtk%majorminor
 %define version 2.8.4
 %define	major		%majorminor
-%define release %mkrel 1
+%define release %mkrel 2
 
 %define	libname %mklibname wxgtk %{major}
+%define	libnamedev %mklibname -d wxgtk %{major}
 %define libgl	%mklibname wxgtkgl %{major}
 
 %define	libnameu %mklibname wxgtku %{major}
+%define	libnameudev %mklibname -d wxgtku %{major}
 %define libglu	%mklibname wxgtkglu %{major}
 #fixed2
 %{?!mkrel:%define mkrel(c:) %{-c: 0.%{-c*}.}%{!?_with_unstable:%(perl -e '$_="%{1}";m/(.\*\\D\+)?(\\d+)$/;$rel=${2}-1;re;print "$1$rel";').%{?subrel:%subrel}%{!?subrel:1}.%{?distversion:%distversion}%{?!distversion:%(echo $[%{mdkversion}/10])}}%{?_with_unstable:%{1}}%{?distsuffix:%distsuffix}%{?!distsuffix:mdk}}
@@ -23,6 +25,8 @@ Group:		System/Libraries
 URL:		http://www.wxwindows.org
 # http://wxwindows.sourceforge.net/snapshots/wx-cvs-20030817.tar.bz2
 Source:		http://prdownloads.sourceforge.net/wxwindows/%fname-%version.tar.bz2
+# gw fix from Ubuntu
+Patch:		wxgtk-2.8-new-gslice.patch
 Patch8:		wxWidgets-2.7.0-multiarch-includes.patch
 Buildrequires:	libpng-devel
 Buildrequires:	zlib-devel
@@ -55,7 +59,7 @@ Motif/LessTif, MS Windows, Mac) from the same source code.
 This package contains the library needed to run programs dynamically
 linked with %{name}.
 
-%package -n %{libname}-devel
+%package -n %{libnamedev}
 Summary:	Header files and development documentation for wxGTK
 Group:		Development/C++
 Requires:	%{libname} = %version
@@ -72,7 +76,7 @@ Conflicts:	%mklibname wxgtk 2.6 -d
 Conflicts:	%mklibname wxgtku 2.6 -d
 Conflicts:	%mklibname wx_base2.4_ 0 -d
 
-%description -n %{libname}-devel
+%description -n %{libnamedev}
 Header files for wxGTK, the GTK+ port of the wxWidgets library.
 
 %package  -n %{libgl}
@@ -97,7 +101,7 @@ Motif/LessTif, MS Windows, Mac) from the same source code.
 This package contains the library needed to run programs dynamically
 linked with the unicode enabled version of %{name}.
 
-%package -n %{libnameu}-devel
+%package -n %{libnameudev}
 Summary:	Header files and development documentation for wxGTK - unicode
 Group:		Development/C++
 Requires:	%{libnameu} = %version
@@ -112,7 +116,7 @@ Conflicts:	%mklibname wxgtk 2.6 -d
 Conflicts:	%mklibname wxgtku 2.6 -d
 Conflicts:	%mklibname wx_base2.4_ 0 -d
 
-%description -n %{libnameu}-devel
+%description -n %{libnameudev}
 Header files for the unicode enabled version of wxGTK, the GTK+ port of
 the wxWidgets library.
 
@@ -126,6 +130,7 @@ GTK+ port of the wxWidgets library.
 
 %prep
 %setup -q -n %oname-%version -a 0
+%patch -p1
 %patch8 -p1 -b .multiarch
 cd %oname-%version
 %patch8 -p1
@@ -253,16 +258,16 @@ rm -rf %buildroot
 %post   -n %{libglu}	-p /sbin/ldconfig
 %postun -n %{libglu}	-p /sbin/ldconfig
 
-%post -n %libname-devel
+%post -n %libnamedev
 update-alternatives --install %{_bindir}/wx-config wx-config %{_libdir}/wx/config/gtk2-ansi-release-%{majorminor} 20 --slave %_bindir/wxrc wxrc %_bindir/wxrc-%{majorminor}-ansi
-%postun -n %libname-devel
+%postun -n %libnamedev
 if [ "$1" = "0" ]; then
   update-alternatives --remove wx-config %{_libdir}/wx/config/gtk2-ansi-release-%{majorminor} 
 fi
 
-%post -n %libnameu-devel
+%post -n %libnameudev
 update-alternatives --install %{_bindir}/wx-config wx-config %{_libdir}/wx/config/gtk2-unicode-release-%{majorminor} 15 --slave %_bindir/wxrc wxrc %_bindir/wxrc-%{majorminor}-unicode
-%postun -n %libnameu-devel
+%postun -n %libnameudev
 if [ "$1" = "0" ]; then
   update-alternatives --remove wx-config %{_libdir}/wx/config/gtk2-unicode-release-%{majorminor} 
 fi
@@ -313,7 +318,7 @@ fi
 %_libdir/libwx_gtk2u_svg-%{majorminor}.so.*
 %_libdir/libwx_gtk2u_xrc-%{majorminor}.so.*
 
-%files -n %{libname}-devel
+%files -n %{libnamedev}
 %defattr(-,root,root,-)
 %doc samples/
 %doc docs/
@@ -359,7 +364,7 @@ fi
 %multiarch %{_includedir}/multiarch-*/wx-%{majorminor}/wx/defs.h
 %endif
 
-%files -n %{libnameu}-devel
+%files -n %{libnameudev}
 %defattr(-,root,root,-)
 %doc samples/
 %doc docs/
