@@ -4,7 +4,7 @@
 %define name		wxgtk%majorminor
 %define version 2.8.4
 %define	major		%majorminor
-%define release %mkrel 2
+%define release %mkrel 3
 
 %define	libname %mklibname wxgtk %{major}
 %define	libnamedev %mklibname -d wxgtk %{major}
@@ -133,6 +133,7 @@ GTK+ port of the wxWidgets library.
 %patch -p1
 %patch8 -p1 -b .multiarch
 cd %oname-%version
+%patch -p1
 %patch8 -p1
 
 find samples demos -name .cvsignore -exec rm {} \;
