@@ -4,7 +4,7 @@
 %define name		wxgtk%majorminor
 %define version 2.8.4
 %define	major		%majorminor
-%define release %mkrel 3
+%define release %mkrel 4
 
 %define	libname %mklibname wxgtk %{major}
 %define	libnamedev %mklibname -d wxgtk %{major}
@@ -108,6 +108,8 @@ Requires:	%{libnameu} = %version
 Requires:	%{libglu} = %version
 Provides:	libwxgtku-devel = %version-%release
 Provides:	wxgtku-devel = %version-%release
+Provides:	wxgtku%majorminor-devel = %version-%release
+Provides:	libwxgtku%majorminor-devel = %version-%release
 Conflicts:	%libname-devel < %version-%release
 Conflicts:	%libname-devel > %version-%release
 Conflicts:	%mklibname wxgtk 2.4 -d
