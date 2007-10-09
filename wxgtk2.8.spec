@@ -2,9 +2,9 @@
 %define fname wxGTK
 %define majorminor	2.8
 %define name		wxgtk%majorminor
-%define version 2.8.4
+%define version 2.8.6
 %define	major		%majorminor
-%define release %mkrel 4
+%define release %mkrel 1
 
 %define	libname %mklibname wxgtk %{major}
 %define	libnamedev %mklibname -d wxgtk %{major}
@@ -25,8 +25,6 @@ Group:		System/Libraries
 URL:		http://www.wxwindows.org
 # http://wxwindows.sourceforge.net/snapshots/wx-cvs-20030817.tar.bz2
 Source:		http://prdownloads.sourceforge.net/wxwindows/%fname-%version.tar.bz2
-# gw fix from Ubuntu
-Patch:		wxgtk-2.8-new-gslice.patch
 Patch8:		wxWidgets-2.7.0-multiarch-includes.patch
 Buildrequires:	libpng-devel
 Buildrequires:	zlib-devel
@@ -132,10 +130,8 @@ GTK+ port of the wxWidgets library.
 
 %prep
 %setup -q -n %oname-%version -a 0
-%patch -p1
 %patch8 -p1 -b .multiarch
 cd %oname-%version
-%patch -p1
 %patch8 -p1
 
 find samples demos -name .cvsignore -exec rm {} \;
@@ -224,6 +220,8 @@ cd contrib
 %makeinstall
 cd ..
 mv %buildroot%_bindir/wxrc-%{majorminor} %buildroot%_bindir/wxrc-%{majorminor}-ansi
+#gw fix broken symlink
+rm -f %buildroot%_bindir/{wx-config,wxrc}
 ###
 cd %oname-%version
 %makeinstall
