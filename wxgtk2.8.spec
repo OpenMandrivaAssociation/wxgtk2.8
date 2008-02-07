@@ -2,7 +2,7 @@
 %define fname wxGTK
 %define majorminor	2.8
 %define name		wxgtk%majorminor
-%define version 2.8.6
+%define version 2.8.7
 %define	major		%majorminor
 %define release %mkrel 1
 
