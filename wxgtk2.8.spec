@@ -249,15 +249,31 @@ ln -s %{_libdir}/wx/config/%multiarch_platform/gtk2-unicode-release-%{majorminor
 %clean
 rm -rf %buildroot
 
+%if %mdkversion < 200900
 %post   -n %{libname}	-p /sbin/ldconfig
+%endif
+%if %mdkversion < 200900
 %postun -n %{libname}	-p /sbin/ldconfig
+%endif
+%if %mdkversion < 200900
 %post   -n %{libgl}	-p /sbin/ldconfig
+%endif
+%if %mdkversion < 200900
 %postun -n %{libgl}	-p /sbin/ldconfig
+%endif
 
+%if %mdkversion < 200900
 %post   -n %{libnameu}	-p /sbin/ldconfig
+%endif
+%if %mdkversion < 200900
 %postun -n %{libnameu}	-p /sbin/ldconfig
+%endif
+%if %mdkversion < 200900
 %post   -n %{libglu}	-p /sbin/ldconfig
+%endif
+%if %mdkversion < 200900
 %postun -n %{libglu}	-p /sbin/ldconfig
+%endif
 
 %post -n %libnamedev
 update-alternatives --install %{_bindir}/wx-config wx-config %{_libdir}/wx/config/gtk2-ansi-release-%{majorminor} 20 --slave %_bindir/wxrc wxrc %_bindir/wxrc-%{majorminor}-ansi
