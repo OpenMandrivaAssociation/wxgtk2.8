@@ -2,9 +2,9 @@
 %define fname wxGTK
 %define majorminor	2.8
 %define name		wxgtk%majorminor
-%define version 2.8.7
+%define version 2.8.8
 %define	major		%majorminor
-%define release %mkrel 2
+%define release %mkrel 1
 
 %define	libname %mklibname wxgtk %{major}
 %define	libnamedev %mklibname -d wxgtk %{major}
@@ -22,9 +22,10 @@ Version:	%{version}
 Release:	%{release}
 License:	LGPL
 Group:		System/Libraries
-URL:		http://www.wxwindows.org
+URL:		http://www.wxwidgets.org/
 # http://wxwindows.sourceforge.net/snapshots/wx-cvs-20030817.tar.bz2
-Source:		http://prdownloads.sourceforge.net/wxwindows/%fname-%version.tar.bz2
+Source0:	http://prdownloads.sourceforge.net/wxwindows/%fname-%version.tar.gz
+Patch3:		wxGTK-lX11_linkage_fix.diff
 Patch8:		wxWidgets-2.7.0-multiarch-includes.patch
 Buildrequires:	libpng-devel
 Buildrequires:	zlib-devel
@@ -35,9 +36,10 @@ Buildrequires:	bison, flex
 Buildrequires:	libtiff-devel
 BuildRequires:  libmesaglu-devel
 BuildRequires:  cppunit-devel
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
+BuildRequires:  X11-devel
 #Conflicts: wxGTK2.6 wxGTK2.5 wxGTK
 Conflicts: %mklibname wx_base2.4_ 0
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 wxWidgets is a free C++ library for cross-platform GUI development.
@@ -130,14 +132,15 @@ GTK+ port of the wxWidgets library.
 
 %prep
 %setup -q -n %oname-%version -a 0
+%patch3 -p1
 %patch8 -p1 -b .multiarch
 cd %oname-%version
+%patch3 -p1
 %patch8 -p1
 
 find samples demos -name .cvsignore -exec rm {} \;
 
 %build
-export LDFLAGS=-L%_prefix/X11R6/%_lib
 %configure2_5x \
 	--without-odbc \
   	--with-opengl \
@@ -150,7 +153,6 @@ export LDFLAGS=-L%_prefix/X11R6/%_lib
 	--with-libtiff=sys \
 	--with-zlib=sys \
 	--enable-optimise \
-	\
 	--enable-calendar \
 	--enable-wave \
 	--enable-fraction \
@@ -193,7 +195,6 @@ cd %oname-%version
 	--with-libtiff=sys \
 	--with-zlib=sys \
 	--enable-optimise \
-	\
 	--enable-calendar \
 	--enable-wave \
 	--enable-fraction \
