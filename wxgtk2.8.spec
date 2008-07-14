@@ -13,14 +13,12 @@
 %define	libnameu %mklibname wxgtku %{major}
 %define	libnameudev %mklibname -d wxgtku %{major}
 %define libglu	%mklibname wxgtkglu %{major}
-#fixed2
-%{?!mkrel:%define mkrel(c:) %{-c: 0.%{-c*}.}%{!?_with_unstable:%(perl -e '$_="%{1}";m/(.\*\\D\+)?(\\d+)$/;$rel=${2}-1;re;print "$1$rel";').%{?subrel:%subrel}%{!?subrel:1}.%{?distversion:%distversion}%{?!distversion:%(echo $[%{mdkversion}/10])}}%{?_with_unstable:%{1}}%{?distsuffix:%distsuffix}%{?!distsuffix:mdk}}
 
 Summary:	GTK+ port of the wxWidgets library
 Name:		%{name}
 Version:	%{version}
 Release:	%{release}
-License:	LGPL
+License:	wxWidgets Library Licence
 Group:		System/Libraries
 URL:		http://www.wxwidgets.org/
 # http://wxwindows.sourceforge.net/snapshots/wx-cvs-20030817.tar.bz2
@@ -28,7 +26,6 @@ Source0:	http://prdownloads.sourceforge.net/wxwindows/%fname-%version.tar.gz
 Patch3:		wxGTK-lX11_linkage_fix.diff
 Patch8:		wxWidgets-2.7.0-multiarch-includes.patch
 Buildrequires:	libpng-devel
-Buildrequires:	zlib-devel
 Buildrequires:	libgnomeprintui-devel
 Buildrequires:	libSDL-devel
 Buildrequires:	libjpeg-devel
