@@ -4,7 +4,7 @@
 %define name		wxgtk%majorminor
 %define version 2.8.9
 %define	major		%majorminor
-%define release %mkrel 2
+%define release %mkrel 3
 
 %define	libname %mklibname wxgtk %{major}
 %define	libnamedev %mklibname -d wxgtk %{major}
@@ -23,7 +23,6 @@ Group:		System/Libraries
 URL:		http://www.wxwidgets.org/
 # http://wxwindows.sourceforge.net/snapshots/wx-cvs-20030817.tar.bz2
 Source0:	http://prdownloads.sourceforge.net/wxwindows/%fname-%version.tar.gz
-Patch:		wxGTK-2.8.9-format-strings.patch
 Patch3:		wxGTK-lX11_linkage_fix.diff
 Patch8:		wxWidgets-2.7.0-multiarch-includes.patch
 Buildrequires:	libpng-devel
@@ -130,11 +129,9 @@ GTK+ port of the wxWidgets library.
 
 %prep
 %setup -q -n %oname-%version -a 0
-%patch -p1 -b .format-strings
 %patch3 -p1
 %patch8 -p1 -b .multiarch
 cd %oname-%version
-%patch -p1
 %patch3 -p1
 %patch8 -p1
 
@@ -143,6 +140,7 @@ find samples demos -name .cvsignore -exec rm {} \;
 %build
 #gw 2.8.9 doesn't build:
 %define _disable_ld_no_undefined 1
+%define Werror_cflags %nil
 
 %configure2_5x \
 	--without-odbc \
