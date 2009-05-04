@@ -2,9 +2,9 @@
 %define fname wxGTK
 %define majorminor	2.8
 %define name		wxgtk%majorminor
-%define version 2.8.9
+%define version 2.8.10
 %define	major		%majorminor
-%define release %mkrel 3
+%define release %mkrel 1
 
 %define	libname %mklibname wxgtk %{major}
 %define	libnamedev %mklibname -d wxgtk %{major}
@@ -21,8 +21,7 @@ Release:	%{release}
 License:	wxWidgets Library Licence
 Group:		System/Libraries
 URL:		http://www.wxwidgets.org/
-# http://wxwindows.sourceforge.net/snapshots/wx-cvs-20030817.tar.bz2
-Source0:	http://prdownloads.sourceforge.net/wxwindows/%fname-%version.tar.gz
+Source0:	http://prdownloads.sourceforge.net/wxwindows/%fname-%version.tar.bz2
 Patch3:		wxGTK-lX11_linkage_fix.diff
 Patch8:		wxWidgets-2.7.0-multiarch-includes.patch
 Buildrequires:	libpng-devel
@@ -166,7 +165,8 @@ find samples demos -name .cvsignore -exec rm {} \;
 	--enable-numberdlg \
 	--enable-splash \
 	--enable-textdlg \
-	--enable-graphics_ctx
+	--enable-graphics_ctx \
+	--enable-grid
 
 %make
 cd contrib
