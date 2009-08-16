@@ -22,6 +22,10 @@ License:	wxWidgets Library Licence
 Group:		System/Libraries
 URL:		http://www.wxwidgets.org/
 Source0:	http://prdownloads.sourceforge.net/wxwindows/%fname-%version.tar.bz2
+# http://trac.wxwidgets.org/ticket/10883
+Patch0:         %{name}-2.8.10-gsocket.patch
+# http://trac.wxwidgets.org/ticket/10993
+Patch1:         %{name}-2.8.10-CVE-2009-2369.patch
 Patch3:		wxGTK-lX11_linkage_fix.diff
 Patch8:		wxWidgets-2.7.0-multiarch-includes.patch
 Buildrequires:	libpng-devel
@@ -128,6 +132,8 @@ GTK+ port of the wxWidgets library.
 
 %prep
 %setup -q -n %oname-%version -a 0
+%patch0 -p1 -b .gsocket
+%patch1 -p0 -b .CVE-2009-2369
 %patch3 -p1
 %patch8 -p1 -b .multiarch
 cd %oname-%version
