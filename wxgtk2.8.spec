@@ -137,6 +137,8 @@ GTK+ port of the wxWidgets library.
 %patch3 -p1
 %patch8 -p1 -b .multiarch
 cd %oname-%version
+%patch0 -p1 -b .gsocket
+%patch1 -p0 -b .CVE-2009-2369
 %patch3 -p1
 %patch8 -p1
 
