@@ -4,7 +4,7 @@
 %define name		wxgtk%majorminor
 %define version 2.8.10
 %define	major		%majorminor
-%define release %mkrel 2
+%define release %mkrel 3
 
 %define	libname %mklibname wxgtk %{major}
 %define	libnamedev %mklibname -d wxgtk %{major}
@@ -37,6 +37,7 @@ Buildrequires:	libtiff-devel
 BuildRequires:  libmesaglu-devel
 BuildRequires:  cppunit-devel
 BuildRequires:  X11-devel
+BuildRequires:  expat-devel
 #Conflicts: wxGTK2.6 wxGTK2.5 wxGTK
 Conflicts: %mklibname wx_base2.4_ 0
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -160,6 +161,7 @@ find samples demos -name .cvsignore -exec rm {} \;
 	--with-libjpeg=sys \
 	--with-libtiff=sys \
 	--with-zlib=sys \
+	--with-expat=sys \
 	--enable-optimise \
 	--enable-calendar \
 	--enable-wave \
