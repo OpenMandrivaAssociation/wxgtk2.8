@@ -4,7 +4,7 @@
 %define name		wxgtk%majorminor
 %define version 2.8.10
 %define	major		%majorminor
-%define release %mkrel 3
+%define release %mkrel 4
 
 %define	libname %mklibname wxgtk %{major}
 %define	libnamedev %mklibname -d wxgtk %{major}
@@ -26,6 +26,7 @@ Source0:	http://prdownloads.sourceforge.net/wxwindows/%fname-%version.tar.bz2
 Patch0:         %{oname}-2.8.10-gsocket.patch
 # http://trac.wxwidgets.org/ticket/10993
 Patch1:         %{oname}-2.8.10-CVE-2009-2369.patch
+Patch2:		wxGTK-2.8.10-CVE-2009-XXXX.diff
 Patch3:		wxGTK-lX11_linkage_fix.diff
 Patch8:		wxWidgets-2.7.0-multiarch-includes.patch
 Buildrequires:	libpng-devel
@@ -135,11 +136,13 @@ GTK+ port of the wxWidgets library.
 %setup -q -n %oname-%version -a 0
 %patch0 -p1 -b .gsocket
 %patch1 -p0 -b .CVE-2009-2369
+%patch2 -p0 -b .CVE-2009-XXXX
 %patch3 -p1
 %patch8 -p1 -b .multiarch
 cd %oname-%version
 %patch0 -p1 -b .gsocket
 %patch1 -p0 -b .CVE-2009-2369
+%patch2 -p0 -b .CVE-2009-XXXX
 %patch3 -p1
 %patch8 -p1
 
