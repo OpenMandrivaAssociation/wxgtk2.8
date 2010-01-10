@@ -4,7 +4,7 @@
 %define name		wxgtk%majorminor
 %define version 2.8.10
 %define	major		%majorminor
-%define release %mkrel 4
+%define release %mkrel 5
 
 %define	libname %mklibname wxgtk %{major}
 %define	libnamedev %mklibname -d wxgtk %{major}
@@ -29,6 +29,7 @@ Patch1:         %{oname}-2.8.10-CVE-2009-2369.patch
 Patch2:		wxGTK-2.8.10-CVE-2009-XXXX.diff
 Patch3:		wxGTK-lX11_linkage_fix.diff
 Patch8:		wxWidgets-2.7.0-multiarch-includes.patch
+Patch9:		wxGTK-2.8.8-CVE-2009-3560.diff
 Buildrequires:	libpng-devel
 Buildrequires:	libgnomeprintui-devel
 Buildrequires:	libSDL-devel
@@ -139,12 +140,14 @@ GTK+ port of the wxWidgets library.
 %patch2 -p0 -b .CVE-2009-XXXX
 %patch3 -p1
 %patch8 -p1 -b .multiarch
+%patch9 -p0 -b .CVE-2009-3560
 cd %oname-%version
 %patch0 -p1 -b .gsocket
 %patch1 -p0 -b .CVE-2009-2369
 %patch2 -p0 -b .CVE-2009-XXXX
 %patch3 -p1
 %patch8 -p1
+%patch9 -p0 -b .CVE-2009-3560
 
 find samples demos -name .cvsignore -exec rm {} \;
 
