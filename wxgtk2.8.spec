@@ -2,9 +2,9 @@
 %define fname wxGTK
 %define majorminor	2.8
 %define name		wxgtk%majorminor
-%define version 2.8.10
+%define version 2.8.11
 %define	major		%majorminor
-%define release %mkrel 6
+%define release %mkrel 1
 
 %define	libname %mklibname wxgtk %{major}
 %define	libnamedev %mklibname -d wxgtk %{major}
@@ -22,13 +22,11 @@ License:	wxWidgets Library Licence
 Group:		System/Libraries
 URL:		http://www.wxwidgets.org/
 Source0:	http://prdownloads.sourceforge.net/wxwindows/%fname-%version.tar.bz2
-# http://trac.wxwidgets.org/ticket/10883
-Patch0:         %{oname}-2.8.10-gsocket.patch
-# http://trac.wxwidgets.org/ticket/10993
-Patch1:         %{oname}-2.8.10-CVE-2009-2369.patch
+#gw security patch for bundled expat which we don't use:
 Patch2:		wxGTK-2.8.10-CVE-2009-XXXX.diff
 Patch3:		wxGTK-lX11_linkage_fix.diff
 Patch8:		wxWidgets-2.7.0-multiarch-includes.patch
+#gw security patch for bundled expat which we don't use:
 Patch9:		wxGTK-2.8.8-CVE-2009-3560.diff
 Buildrequires:	libpng-devel
 Buildrequires:	libgnomeprintui-devel
@@ -135,15 +133,11 @@ GTK+ port of the wxWidgets library.
 
 %prep
 %setup -q -n %oname-%version -a 0
-%patch0 -p1 -b .gsocket
-%patch1 -p0 -b .CVE-2009-2369
 %patch2 -p0 -b .CVE-2009-XXXX
 %patch3 -p1
 %patch8 -p1 -b .multiarch
 %patch9 -p0 -b .CVE-2009-3560
 cd %oname-%version
-%patch0 -p1 -b .gsocket
-%patch1 -p0 -b .CVE-2009-2369
 %patch2 -p0 -b .CVE-2009-XXXX
 %patch3 -p1
 %patch8 -p1
