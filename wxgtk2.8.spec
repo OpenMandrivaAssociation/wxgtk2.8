@@ -4,7 +4,7 @@
 %define name		wxgtk%majorminor
 %define version 2.8.11
 %define	major		%majorminor
-%define release %mkrel 1
+%define release %mkrel 2
 
 %define	libname %mklibname wxgtk %{major}
 %define	libnamedev %mklibname -d wxgtk %{major}
@@ -143,12 +143,21 @@ cd %oname-%version
 %patch8 -p1
 %patch9 -p0 -b .CVE-2009-3560
 
+cd ..
+# fix plugin dir for 64-bit
+sed -i -e 's|/lib|/%{_lib}|' src/unix/stdpaths.cpp %oname-%version/src/unix/stdpaths.cpp
+
 find samples demos -name .cvsignore -exec rm {} \;
 
 %build
-#gw 2.8.9 doesn't build:
+#gw 2.8.11 doesn't build otherwise:
 %define _disable_ld_no_undefined 1
 %define Werror_cflags %nil
+# --disable-optimise prevents our $RPM_OPT_FLAGS being overridden
+# (see OPTIMISE in configure).
+# this code dereferences type-punned pointers like there's no tomorrow.
+CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing"
+CXXFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing"
 
 %configure2_5x \
 	--without-odbc \
@@ -162,7 +171,7 @@ find samples demos -name .cvsignore -exec rm {} \;
 	--with-libtiff=sys \
 	--with-zlib=sys \
 	--with-expat=sys \
-	--enable-optimise \
+	--disable-optimise \
 	--enable-calendar \
 	--enable-wave \
 	--enable-fraction \
@@ -176,9 +185,12 @@ find samples demos -name .cvsignore -exec rm {} \;
 	--enable-splash \
 	--enable-textdlg \
 	--enable-graphics_ctx \
-	--enable-grid
+	--enable-grid \
+	--disable-catch_segvs
 
 %make
+# Why isn't this this part of the main build? Need to investigate.
+%make  -C locale allmo
 cd contrib
 %make
 cd ..
@@ -206,7 +218,7 @@ cd %oname-%version
 	--with-libjpeg=sys \
 	--with-libtiff=sys \
 	--with-zlib=sys \
-	--enable-optimise \
+	--disable-optimise \
 	--enable-calendar \
 	--enable-wave \
 	--enable-fraction \
@@ -219,7 +231,9 @@ cd %oname-%version
 	--enable-numberdlg \
 	--enable-splash \
 	--enable-textdlg \
-	--enable-graphics_ctx
+	--enable-graphics_ctx \
+	--enable-grid \
+	--disable-catch_segvs
 %make
 cd contrib
 %make
@@ -248,9 +262,6 @@ rm -f %buildroot%_bindir/{wx-config,wxrc}
 ln -sf %_libdir/wx/config/gtk2-ansi-release-%{majorminor} %buildroot%_bindir/wx-config-ansi
 ln -sf %_libdir/wx/config/gtk2-unicode-release-%{majorminor} %buildroot%_bindir/wx-config-unicode
 
-
-%if %mdkversion >= 1020
-# multiarch devel
 %multiarch_binaries $RPM_BUILD_ROOT%{_libdir}/wx/config/gtk2-{ansi,unicode}-release-%{majorminor}
 #gw this breaks /usr/bin/wx-config
 mkdir %buildroot%multiarch_bindir
@@ -258,36 +269,14 @@ ln -s %{_libdir}/wx/config/%multiarch_platform/gtk2-ansi-release-%{majorminor} %
 ln -s %{_libdir}/wx/config/%multiarch_platform/gtk2-unicode-release-%{majorminor} %buildroot%multiarch_bindir/wx-config-unicode
 %multiarch_includes $RPM_BUILD_ROOT%{_libdir}/wx/include/gtk2-{ansi,unicode}-release-%{majorminor}/wx/setup.h
 %multiarch_includes $RPM_BUILD_ROOT%{_includedir}/wx-%{majorminor}/wx/defs.h
-%endif
+
+#gw remove Mandriva linker flags
+sed -i -e "s^-Wl,--as-needed^^g" %buildroot%_libdir/wx/config/%multiarch_platform/*
+
 
 %clean
 rm -rf %buildroot
 
-%if %mdkversion < 200900
-%post   -n %{libname}	-p /sbin/ldconfig
-%endif
-%if %mdkversion < 200900
-%postun -n %{libname}	-p /sbin/ldconfig
-%endif
-%if %mdkversion < 200900
-%post   -n %{libgl}	-p /sbin/ldconfig
-%endif
-%if %mdkversion < 200900
-%postun -n %{libgl}	-p /sbin/ldconfig
-%endif
-
-%if %mdkversion < 200900
-%post   -n %{libnameu}	-p /sbin/ldconfig
-%endif
-%if %mdkversion < 200900
-%postun -n %{libnameu}	-p /sbin/ldconfig
-%endif
-%if %mdkversion < 200900
-%post   -n %{libglu}	-p /sbin/ldconfig
-%endif
-%if %mdkversion < 200900
-%postun -n %{libglu}	-p /sbin/ldconfig
-%endif
 
 %post -n %libnamedev
 update-alternatives --install %{_bindir}/wx-config wx-config %{_libdir}/wx/config/gtk2-ansi-release-%{majorminor} 20 --slave %_bindir/wxrc wxrc %_bindir/wxrc-%{majorminor}-ansi
@@ -356,9 +345,7 @@ fi
 %doc demos/
 %{_bindir}/wx-config-ansi
 %{_bindir}/wxrc-*ansi
-%if %mdkversion >= 1020
 %{multiarch_bindir}/wx-config-ansi
-%endif
 %{_includedir}/wx-%{majorminor}/
 %dir %{_libdir}/wx/
 %dir %{_libdir}/wx/include/
@@ -389,11 +376,9 @@ fi
 %_libdir/libwx_gtk2_gl-%{majorminor}.so
 %_datadir/aclocal/*
 %_datadir/bakefile/
-%if %mdkversion >= 1020
 %multiarch %{_libdir}/wx/config/multiarch-*/gtk2-ansi-release-%{majorminor}
 %multiarch %{_libdir}/wx/include/multiarch-*/gtk2-ansi-release-%{majorminor}
 %multiarch %{_includedir}/multiarch-*/wx-%{majorminor}/wx/defs.h
-%endif
 
 %files -n %{libnameudev}
 %defattr(-,root,root,-)
@@ -402,9 +387,7 @@ fi
 %doc demos/
 %{_bindir}/wx-config-unicode
 %{_bindir}/wxrc-*unicode
-%if %mdkversion >= 1020
 %{multiarch_bindir}/wx-config-unicode
-%endif
 %{_includedir}/wx-%{majorminor}/
 %dir %{_libdir}/wx/
 %dir %{_libdir}/wx/include/
@@ -435,11 +418,9 @@ fi
 %_libdir/libwx_gtk2u_gl-%{majorminor}.so
 %_datadir/aclocal/*
 %_datadir/bakefile/
-%if %mdkversion >= 1020
 %multiarch %{_libdir}/wx/config/multiarch-*/gtk2-unicode-release-%{majorminor}
 %multiarch %{_libdir}/wx/include/multiarch-*/gtk2-unicode-release-%{majorminor}
 %multiarch %{_includedir}/multiarch-*/wx-%{majorminor}/wx/defs.h
-%endif
 
 %files -n %{libgl}
 %defattr(-,root,root,-)
