@@ -4,7 +4,7 @@
 %define name		wxgtk%majorminor
 %define version 2.8.11
 %define	major		%majorminor
-%define release %mkrel 2
+%define release %mkrel 3
 
 %define	libname %mklibname wxgtk %{major}
 %define	libnamedev %mklibname -d wxgtk %{major}
@@ -28,16 +28,18 @@ Patch3:		wxGTK-lX11_linkage_fix.diff
 Patch8:		wxWidgets-2.7.0-multiarch-includes.patch
 #gw security patch for bundled expat which we don't use:
 Patch9:		wxGTK-2.8.8-CVE-2009-3560.diff
-Buildrequires:	libpng-devel
-Buildrequires:	libgnomeprintui-devel
-Buildrequires:	libSDL-devel
-Buildrequires:	libjpeg-devel
+BuildRequires:	libSDL-devel
+BuildRequires:	libsm-devel
+BuildRequires:	libx11-devel
+Buildrequires:	libxinerama-devel
+BuildRequires:	libxxf86vm-devel
+BuildRequires:	libexpat-devel
+BuildRequires:	gtk+2-devel
+BuildRequires:	jpeg-devel
+BuildRequires:	png-devel
+BuildRequires:	tiff-devel
 Buildrequires:	bison, flex
-Buildrequires:	libtiff-devel
-BuildRequires:  libmesaglu-devel
-BuildRequires:  cppunit-devel
-BuildRequires:  X11-devel
-BuildRequires:  expat-devel
+BuildRequires:  mesaglu-devel
 #Conflicts: wxGTK2.6 wxGTK2.5 wxGTK
 Conflicts: %mklibname wx_base2.4_ 0
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
