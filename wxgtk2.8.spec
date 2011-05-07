@@ -265,11 +265,13 @@ ln -sf %_libdir/wx/config/gtk2-ansi-release-%{majorminor} %buildroot%_bindir/wx-
 ln -sf %_libdir/wx/config/gtk2-unicode-release-%{majorminor} %buildroot%_bindir/wx-config-unicode
 
 %multiarch_binaries $RPM_BUILD_ROOT%{_libdir}/wx/config/gtk2-{ansi,unicode}-release-%{majorminor}
+
 #gw this breaks /usr/bin/wx-config
 mkdir %buildroot%multiarch_bindir
 ln -s %{_libdir}/wx/config/%multiarch_platform/gtk2-ansi-release-%{majorminor} %buildroot%multiarch_bindir/wx-config-ansi
 ln -s %{_libdir}/wx/config/%multiarch_platform/gtk2-unicode-release-%{majorminor} %buildroot%multiarch_bindir/wx-config-unicode
 %multiarch_includes $RPM_BUILD_ROOT%{_libdir}/wx/include/gtk2-{ansi,unicode}-release-%{majorminor}/wx/setup.h
+
 %multiarch_includes $RPM_BUILD_ROOT%{_includedir}/wx-%{majorminor}/wx/defs.h
 
 #gw remove Mandriva linker flags
@@ -378,9 +380,9 @@ fi
 %_libdir/libwx_gtk2_gl-%{majorminor}.so
 %_datadir/aclocal/*
 %_datadir/bakefile/
-%multiarch %{_libdir}/wx/config/multiarch-*/gtk2-ansi-release-%{majorminor}
-%multiarch %{_libdir}/wx/include/multiarch-*/gtk2-ansi-release-%{majorminor}
-%multiarch %{_includedir}/multiarch-*/wx-%{majorminor}/wx/defs.h
+%{_libdir}/wx/config/multiarch-*/gtk2-ansi-release-%{majorminor}
+%{_libdir}/wx/include/multiarch-*/gtk2-ansi-release-%{majorminor}
+%{_includedir}/multiarch-*/wx-%{majorminor}/wx/defs.h
 
 %files -n %{libnameudev}
 %defattr(-,root,root,-)
@@ -420,9 +422,9 @@ fi
 %_libdir/libwx_gtk2u_gl-%{majorminor}.so
 %_datadir/aclocal/*
 %_datadir/bakefile/
-%multiarch %{_libdir}/wx/config/multiarch-*/gtk2-unicode-release-%{majorminor}
-%multiarch %{_libdir}/wx/include/multiarch-*/gtk2-unicode-release-%{majorminor}
-%multiarch %{_includedir}/multiarch-*/wx-%{majorminor}/wx/defs.h
+%{_libdir}/wx/config/multiarch-*/gtk2-unicode-release-%{majorminor}
+%{_libdir}/wx/include/multiarch-*/gtk2-unicode-release-%{majorminor}
+%{_includedir}/multiarch-*/wx-%{majorminor}/wx/defs.h
 
 %files -n %{libgl}
 %defattr(-,root,root,-)
