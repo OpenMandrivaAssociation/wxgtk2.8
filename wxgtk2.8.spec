@@ -2,9 +2,9 @@
 %define fname wxGTK
 %define majorminor	2.8
 %define name		wxgtk%majorminor
-%define version 2.8.11
+%define version 2.8.12
 %define	major		%majorminor
-%define release %mkrel 4
+%define release %mkrel 1
 
 %define	libname %mklibname wxgtk %{major}
 %define	libnamedev %mklibname -d wxgtk %{major}
@@ -134,7 +134,7 @@ OpenGl add-on library for the unicode enabled version of wxGTK, the
 GTK+ port of the wxWidgets library.
 
 %prep
-%setup -q -n %oname-%version -a 0
+%setup -q -n %oname-%version -a 0 
 %patch2 -p0 -b .CVE-2009-XXXX
 %patch3 -p1
 %patch8 -p1 -b .multiarch
