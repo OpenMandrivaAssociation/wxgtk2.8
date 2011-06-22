@@ -4,7 +4,7 @@
 %define name		wxgtk%majorminor
 %define version 2.8.12
 %define	major		%majorminor
-%define release %mkrel 1
+%define release %mkrel 2
 
 %define	libname %mklibname wxgtk %{major}
 %define	libnamedev %mklibname -d wxgtk %{major}
@@ -139,11 +139,13 @@ GTK+ port of the wxWidgets library.
 %patch3 -p1
 %patch8 -p1 -b .multiarch
 %patch9 -p0 -b .CVE-2009-3560
+sed -i -e 's/@LDFLAGS@//' wx-config.in
 cd %oname-%version
 %patch2 -p0 -b .CVE-2009-XXXX
 %patch3 -p1
 %patch8 -p1
 %patch9 -p0 -b .CVE-2009-3560
+sed -i -e 's/@LDFLAGS@//' wx-config.in
 
 cd ..
 # fix plugin dir for 64-bit
