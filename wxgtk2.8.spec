@@ -4,7 +4,7 @@
 %define name		wxgtk%majorminor
 %define version 2.8.12
 %define	major		%majorminor
-%define release %mkrel 2
+%define release %mkrel 3
 
 %define	libname %mklibname wxgtk %{major}
 %define	libnamedev %mklibname -d wxgtk %{major}
