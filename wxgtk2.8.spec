@@ -266,15 +266,15 @@ rm -f %buildroot%_bindir/{wx-config,wxrc}
 ln -sf %_libdir/wx/config/gtk2-ansi-release-%{majorminor} %buildroot%_bindir/wx-config-ansi
 ln -sf %_libdir/wx/config/gtk2-unicode-release-%{majorminor} %buildroot%_bindir/wx-config-unicode
 
-%multiarch_binaries $RPM_BUILD_ROOT%{_libdir}/wx/config/gtk2-{ansi,unicode}-release-%{majorminor}
+%multiarch_binaries %{buildroot}%{_libdir}/wx/config/gtk2-{ansi,unicode}-release-%{majorminor}
 
 #gw this breaks /usr/bin/wx-config
 mkdir %buildroot%multiarch_bindir
 ln -s %{_libdir}/wx/config/%multiarch_platform/gtk2-ansi-release-%{majorminor} %buildroot%multiarch_bindir/wx-config-ansi
 ln -s %{_libdir}/wx/config/%multiarch_platform/gtk2-unicode-release-%{majorminor} %buildroot%multiarch_bindir/wx-config-unicode
-%multiarch_includes $RPM_BUILD_ROOT%{_libdir}/wx/include/gtk2-{ansi,unicode}-release-%{majorminor}/wx/setup.h
+%multiarch_includes %{buildroot}%{_libdir}/wx/include/gtk2-{ansi,unicode}-release-%{majorminor}/wx/setup.h
 
-%multiarch_includes $RPM_BUILD_ROOT%{_includedir}/wx-%{majorminor}/wx/defs.h
+%multiarch_includes %{buildroot}%{_includedir}/wx-%{majorminor}/wx/defs.h
 
 #gw remove Mandriva linker flags
 sed -i -e "s^-Wl,--as-needed^^g" %buildroot%_libdir/wx/config/%multiarch_platform/*
