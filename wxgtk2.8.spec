@@ -30,6 +30,7 @@ Patch3:		wxGTK-lX11_linkage_fix.diff
 Patch8:		wxWidgets-2.7.0-multiarch-includes.patch
 #gw security patch for bundled expat which we don't use:
 Patch9:		wxGTK-2.8.8-CVE-2009-3560.diff
+Patch10:	wxGTK-2.8.12-fix-user_data-casting.patch
 BuildRequires:	libSDL-devel
 BuildRequires:	libsm-devel
 BuildRequires:	libx11-devel
@@ -149,6 +150,7 @@ cd %oname-%version
 %patch3 -p1
 %patch8 -p1
 %patch9 -p0 -b .CVE-2009-3560
+%patch10 -p1 -b .cast~
 sed -i -e 's/@LDFLAGS@//' wx-config.in
 
 cd ..
