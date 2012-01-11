@@ -1,10 +1,12 @@
+%define build_ansi_devel 0
+
 %define oname wxGTK
 %define fname wxGTK
 %define majorminor	2.8
 %define name		wxgtk%majorminor
 %define version 2.8.12
 %define	major		%majorminor
-%define release %mkrel 3
+%define release %mkrel 4
 
 %define	libname %mklibname wxgtk %{major}
 %define	libnamedev %mklibname -d wxgtk %{major}
@@ -62,6 +64,7 @@ Motif/LessTif, MS Windows, Mac) from the same source code.
 This package contains the library needed to run programs dynamically
 linked with %{name}.
 
+%if %{build_ansi_devel}
 %package -n %{libnamedev}
 Summary:	Header files and development documentation for wxGTK
 Group:		Development/C++
@@ -81,6 +84,7 @@ Conflicts:	%mklibname wx_base2.4_ 0 -d
 
 %description -n %{libnamedev}
 Header files for wxGTK, the GTK+ port of the wxWidgets library.
+%endif
 
 %package  -n %{libgl}
 Summary:	GTK+ port of the wxWidgets library, OpenGl add-on
@@ -160,8 +164,8 @@ find samples demos -name .cvsignore -exec rm {} \;
 # --disable-optimise prevents our $RPM_OPT_FLAGS being overridden
 # (see OPTIMISE in configure).
 # this code dereferences type-punned pointers like there's no tomorrow.
-CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing"
-CXXFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing"
+CFLAGS="%{optflags} -fno-strict-aliasing"
+CXXFLAGS="%{optflags} -fno-strict-aliasing"
 
 %configure2_5x \
 	--without-odbc \
@@ -190,14 +194,14 @@ CXXFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing"
 	--enable-textdlg \
 	--enable-graphics_ctx \
 	--enable-grid \
-	--disable-catch_segvs
+	--disable-catch_segvs \
+	--enable-mediactrl \
+	--enable-dataviewctrl
 
 %make
 # Why isn't this this part of the main build? Need to investigate.
-%make  -C locale allmo
-cd contrib
-%make
-cd ..
+%make -C locale allmo
+%make -C contrib
 #gw prepare samples
 cd demos
 make clean
@@ -237,7 +241,10 @@ cd %oname-%version
 	--enable-textdlg \
 	--enable-graphics_ctx \
 	--enable-grid \
-	--disable-catch_segvs
+	--disable-catch_segvs \
+	--enable-mediactrl \
+	--enable-dataviewctrl
+
 %make
 cd contrib
 %make
@@ -277,19 +284,32 @@ ln -s %{_libdir}/wx/config/%multiarch_platform/gtk2-unicode-release-%{majorminor
 %multiarch_includes %{buildroot}%{_includedir}/wx-%{majorminor}/wx/defs.h
 
 #gw remove Mandriva linker flags
-sed -i -e "s^-Wl,--as-needed^^g" %buildroot%_libdir/wx/config/%multiarch_platform/*
+sed -i -e "s^-Wl,--as-needed^^g" %{buildroot}%{_libdir}/wx/config/%{multiarch_platform}/*
 
+%if !%{build_ansi_devel}
+rm -f %{buildroot}%{_bindir}/wx-config-ansi
+rm -f %{buildroot}%{_libdir}/wx/config/gtk2-ansi-release-%{majorminor}
+rm -f %{buildroot}%{multiarch_bindir}/wx-config-ansi
+rm -f %{buildroot}%{_bindir}/wxrc-%{majorminor}-ansi
+rm -f %{buildroot}%{_libdir}/libwx_base-%{majorminor}.so
+rm -f %{buildroot}%{_libdir}/libwx_base_*-%{majorminor}.so
+rm -f %{buildroot}%{_libdir}/libwx_gtk2_*-%{majorminor}.so
+rm -f %{buildroot}%{_libdir}/wx/config/%{multiarch_platform}/gtk2-ansi-release-%{majorminor}
+rm -f %{buildroot}%{_libdir}/wx/include/gtk2-ansi-release-%{majorminor}/wx/setup.h
+rm -f %{buildroot}%{_libdir}/wx/include/multiarch-i386-linux/gtk2-ansi-release-%{majorminor}/wx/setup.h
+%endif
 
 %clean
 rm -rf %buildroot
 
-
+%if %{build_ansi_devel}
 %post -n %libnamedev
 update-alternatives --install %{_bindir}/wx-config wx-config %{_libdir}/wx/config/gtk2-ansi-release-%{majorminor} 20 --slave %_bindir/wxrc wxrc %_bindir/wxrc-%{majorminor}-ansi
 %postun -n %libnamedev
 if [ "$1" = "0" ]; then
   update-alternatives --remove wx-config %{_libdir}/wx/config/gtk2-ansi-release-%{majorminor} 
 fi
+%endif
 
 %post -n %libnameudev
 update-alternatives --install %{_bindir}/wx-config wx-config %{_libdir}/wx/config/gtk2-unicode-release-%{majorminor} 15 --slave %_bindir/wxrc wxrc %_bindir/wxrc-%{majorminor}-unicode
@@ -309,6 +329,7 @@ fi
 %_libdir/libwx_gtk2_core-%{majorminor}.so.*
 %_libdir/libwx_gtk2_html-%{majorminor}.so.*
 %_libdir/libwx_gtk2_richtext-%{majorminor}.so.*
+%_libdir/libwx_gtk2_media-%{majorminor}.so.*
 %_libdir/libwx_base-%majorminor.so.*
 %_libdir/libwx_base_net-%majorminor.so.*
 %_libdir/libwx_base_xml-%majorminor.so.*
@@ -330,6 +351,7 @@ fi
 %_libdir/libwx_gtk2u_core-%{majorminor}.so.*
 %_libdir/libwx_gtk2u_html-%{majorminor}.so.*
 %_libdir/libwx_gtk2u_richtext-%{majorminor}.so.*
+%_libdir/libwx_gtk2u_media-%{majorminor}.so.*
 %_libdir/libwx_baseu-%majorminor.so.*
 %_libdir/libwx_baseu_net-%majorminor.so.*
 %_libdir/libwx_baseu_xml-%majorminor.so.*
@@ -344,6 +366,7 @@ fi
 %_libdir/libwx_gtk2u_svg-%{majorminor}.so.*
 %_libdir/libwx_gtk2u_xrc-%{majorminor}.so.*
 
+%if %{build_ansi_devel}
 %files -n %{libnamedev}
 %defattr(-,root,root,-)
 %doc samples/
@@ -365,6 +388,7 @@ fi
 %_libdir/libwx_gtk2_core-%{majorminor}.so
 %_libdir/libwx_gtk2_html-%{majorminor}.so
 %_libdir/libwx_gtk2_richtext-%{majorminor}.so
+%_libdir/libwx_gtk2_media-%{majorminor}.so
 %_libdir/libwx_base-%majorminor.so
 %_libdir/libwx_base_net-%majorminor.so
 %_libdir/libwx_base_xml-%majorminor.so
@@ -385,6 +409,7 @@ fi
 %{_libdir}/wx/config/multiarch-*/gtk2-ansi-release-%{majorminor}
 %{_libdir}/wx/include/multiarch-*/gtk2-ansi-release-%{majorminor}
 %{_includedir}/multiarch-*/wx-%{majorminor}/wx/defs.h
+%endif
 
 %files -n %{libnameudev}
 %defattr(-,root,root,-)
@@ -407,6 +432,7 @@ fi
 %_libdir/libwx_gtk2u_core-%{majorminor}.so
 %_libdir/libwx_gtk2u_html-%{majorminor}.so
 %_libdir/libwx_gtk2u_richtext-%{majorminor}.so
+%_libdir/libwx_gtk2u_media-%{majorminor}.so
 %_libdir/libwx_baseu-%majorminor.so
 %_libdir/libwx_baseu_net-%majorminor.so
 %_libdir/libwx_baseu_xml-%majorminor.so
