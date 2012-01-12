@@ -39,6 +39,8 @@ BuildRequires:	png-devel
 BuildRequires:	tiff-devel
 Buildrequires:	bison, flex
 BuildRequires:	mesaglu-devel
+BuildRequires:	libgstreamer-devel
+BuildRequires:	libgstreamer-plugins-base-devel
 #Conflicts: wxGTK2.6 wxGTK2.5 wxGTK
 Conflicts:	%mklibname wx_base2.4_ 0
 
