@@ -41,6 +41,7 @@ Buildrequires:	bison, flex
 BuildRequires:	mesaglu-devel
 BuildRequires:	libgstreamer-devel
 BuildRequires:	libgstreamer-plugins-base-devel
+BuildRequires:	pkgconfig(gconf-2.0)
 #Conflicts: wxGTK2.6 wxGTK2.5 wxGTK
 Conflicts:	%mklibname wx_base2.4_ 0
 
