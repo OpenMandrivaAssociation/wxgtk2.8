@@ -300,7 +300,7 @@ rm -f %{buildroot}%{_libdir}/libwx_base_*-%{majorminor}.so
 rm -f %{buildroot}%{_libdir}/libwx_gtk2_*-%{majorminor}.so
 rm -f %{buildroot}%{_libdir}/wx/config/%{multiarch_platform}/gtk2-ansi-release-%{majorminor}
 rm -f %{buildroot}%{_libdir}/wx/include/gtk2-ansi-release-%{majorminor}/wx/setup.h
-rm -f %{buildroot}%{_libdir}/wx/include/multiarch-i386-linux/gtk2-ansi-release-%{majorminor}/wx/setup.h
+rm -f %{buildroot}%{_libdir}/wx/include/multiarch-*-linux/gtk2-ansi-release-%{majorminor}/wx/setup.h
 %endif
 
 %clean
