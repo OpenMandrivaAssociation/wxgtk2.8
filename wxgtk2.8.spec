@@ -151,7 +151,19 @@ CXXFLAGS="%{optflags} -fno-strict-aliasing"
 
 %make
 
+%make -C locale allmo
 %make -C contrib
+#gw prepare samples
+cd demos
+make clean
+%__rm -f makefile* demos.bkl
+cd ../samples
+make clean
+%__rm -f makefile* samples.bkl
+cd ..
+find demos samples -name Makefile|xargs perl -pi -e 's^CXXC =.*^CXXC=\$(CXX) `wx-config --cflags`^'
+find demos samples -name Makefile|xargs perl -pi -e 's^EXTRALIBS =.*^EXTRALIBS=^'
+find demos samples -name Makefile|xargs perl -pi -e 's^SAMPLES_RPATH_FLAG =.*^SAMPLES_RPATH_FLAG=^'
 
 %install
 %__rm -rf %{buildroot}
