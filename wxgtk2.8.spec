@@ -13,7 +13,7 @@
 Summary:	GTK+ port of the wxWidgets library
 Name:		wxgtk%{majorminor}
 Version:	2.8.12
-Release:	%mkrel 5
+Release:	%mkrel 6
 License:	wxWidgets Library Licence
 Group:		System/Libraries
 URL:		http://www.wxwidgets.org/
@@ -40,8 +40,6 @@ BuildRequires:	mesaglu-devel
 BuildRequires:	libgstreamer-devel
 BuildRequires:	libgstreamer-plugins-base-devel
 BuildRequires:	pkgconfig(gconf-2.0)
-#Conflicts: wxGTK2.6 wxGTK2.5 wxGTK
-Conflicts:	%mklibname wx_base2.4_ 0
 
 %description
 wxWidgets is a free C++ library for cross-platform GUI development.
@@ -71,13 +69,6 @@ Provides:	libwxgtku-devel = %{version}-%{release}
 Provides:	wxgtku-devel = %{version}-%{release}
 Provides:	wxgtku%{majorminor}-devel = %{version}-%{release}
 Provides:	libwxgtku%{majorminor}-devel = %{version}-%{release}
-Conflicts:	%{libname}-devel < %{version}-%{release}
-Conflicts:	%{libname}-devel > %{version}-%{release}
-Conflicts:	%mklibname wxgtk 2.4 -d
-Conflicts:	%mklibname wxgtk 2.5_3 -d
-Conflicts:	%mklibname wxgtk 2.6 -d
-Conflicts:	%mklibname wxgtku 2.6 -d
-Conflicts:	%mklibname wx_base2.4_ 0 -d
 %rename		wxGTK-devel
 %rename		%{libnamedev}
 
