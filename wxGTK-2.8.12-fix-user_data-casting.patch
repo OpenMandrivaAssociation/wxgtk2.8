@@ -1,0 +1,20 @@
+--- wxGTK-2.8.12/src/gtk/dataview.cpp.ugly_cast~	2012-01-11 18:53:20.341503051 +0100
++++ wxGTK-2.8.12/src/gtk/dataview.cpp	2012-01-11 18:54:42.433379784 +0100
+@@ -311,7 +311,7 @@ wxgtk_list_store_get_value (GtkTreeModel
+         g_value_init( value, G_TYPE_STRING );
+         model->GetValue( variant,
+                          (unsigned int) column,
+-                         (unsigned int) iter->user_data );
++                         (long unsigned int) iter->user_data );
+ 
+         // FIXME: we should support different encodings here
+         g_value_set_string( value, wxGTK_CONV_SYS(variant.GetString()) );
+@@ -1417,7 +1417,7 @@ static void wxGtkTreeCellDataFunc( GtkTr
+ 
+     wxDataViewRenderer *cell = (wxDataViewRenderer*) data;
+ 
+-    unsigned int model_row = (unsigned int) iter->user_data;
++    unsigned int model_row = (long unsigned int) iter->user_data;
+ 
+     wxVariant value;
+     list_store->model->GetValue( value, cell->GetOwner()->GetModelColumn(), model_row );

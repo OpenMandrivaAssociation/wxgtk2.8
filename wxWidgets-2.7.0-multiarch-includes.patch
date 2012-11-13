@@ -1,0 +1,11 @@
+--- wxWidgets-2.7.0/wx-config.in~	2006-08-07 09:38:42.000000000 +0200
++++ wxWidgets-2.7.0/wx-config.in	2006-08-07 09:39:33.000000000 +0200
+@@ -1138,7 +1138,7 @@
+     _include_cppflags="-I${includedir} -I${prefix}/contrib/include"
+ fi
+ 
+-_cppflags=`echo "-I${libdir}/wx/include/@TOOLCHAIN_FULLNAME@" $_include_cppflags "@WXCONFIG_CPPFLAGS@" $_gui_cppflags`
++_cppflags=`echo "-I${libdir}/wx/include/ -I${libdir}/wx/include/@TOOLCHAIN_FULLNAME@" $_include_cppflags "@WXCONFIG_CPPFLAGS@" $_gui_cppflags`
+ 
+ # now without further ado, we can answer these too.
+ [ -z "$output_option_cppflags" ] || echo $_cppflags
