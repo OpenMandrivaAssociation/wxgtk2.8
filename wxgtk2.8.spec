@@ -13,7 +13,7 @@
 Summary:	GTK+ port of the wxWidgets library
 Name:		wxgtk%{majorminor}
 Version:	2.8.12
-Release:	11
+Release:	12
 License:	wxWidgets Library Licence
 Group:		System/Libraries
 URL:		http://www.wxwidgets.org/
@@ -34,6 +34,7 @@ BuildRequires:	pkgconfig(expat)
 BuildRequires:	pkgconfig(gtk+-2.0)
 BuildRequires:	jpeg-devel
 BuildRequires:	pkgconfig(libpng)
+BuildRequires:	pkgconfig(libgnomeprintui-2.2)
 BuildRequires:	tiff-devel
 Buildrequires:	bison, flex
 BuildRequires:	pkgconfig(glu)
