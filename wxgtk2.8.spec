@@ -34,7 +34,6 @@ BuildRequires:	pkgconfig(expat)
 BuildRequires:	pkgconfig(gtk+-2.0)
 BuildRequires:	jpeg-devel
 BuildRequires:	pkgconfig(libpng)
-BuildRequires:	pkgconfig(libgnomeprintui-2.2)
 BuildRequires:	tiff-devel
 Buildrequires:	bison, flex
 BuildRequires:	pkgconfig(glu)
@@ -251,8 +250,8 @@ fi
 %{_libdir}/libwx_gtk2u_gl-%{majorminor}.so
 %{_datadir}/aclocal/*
 %{_datadir}/bakefile/
-%{_libdir}/wx/config/multiarch-*/gtk2-unicode-release-%{majorminor}
-%{_libdir}/wx/include/multiarch-*/gtk2-unicode-release-%{majorminor}
+%{_libdir}/wx/config/multiarch-*/
+%{_libdir}/wx/include/multiarch-*/
 %{_includedir}/multiarch-*/wx-%{majorminor}/wx/defs.h
 
 %files -n %{libglu}
