@@ -13,7 +13,7 @@
 Summary:	GTK+ port of the wxWidgets library
 Name:		wxgtk%{majorminor}
 Version:	2.8.12
-Release:	18
+Release:	19
 License:	wxWidgets Library Licence
 Group:		System/Libraries
 URL:		http://www.wxwidgets.org/
