@@ -13,7 +13,7 @@
 Summary:	GTK+ port of the wxWidgets library
 Name:		wxgtk%{majorminor}
 Version:	2.8.12
-Release:	19
+Release:	20
 License:	wxWidgets Library Licence
 Group:		System/Libraries
 URL:		http://www.wxwidgets.org/
@@ -25,6 +25,7 @@ Patch8:		wxWidgets-2.7.0-multiarch-includes.patch
 #gw security patch for bundled expat which we don't use:
 Patch9:		wxGTK-2.8.8-CVE-2009-3560.diff
 Patch10:	wxGTK-2.8.12-fix-user_data-casting.patch
+Patch11:	gst1.0.patch
 BuildRequires:	pkgconfig(sdl)
 BuildRequires:	pkgconfig(sm)
 BuildRequires:	pkgconfig(x11)
@@ -37,8 +38,8 @@ BuildRequires:	pkgconfig(libpng)
 BuildRequires:	tiff-devel
 Buildrequires:	bison, flex
 BuildRequires:	pkgconfig(glu)
-BuildRequires:	pkgconfig(gstreamer-0.10)
-BuildRequires:	pkgconfig(gstreamer-plugins-base-0.10)
+BuildRequires:	pkgconfig(gstreamer-1.0)
+BuildRequires:	pkgconfig(gstreamer-plugins-base-1.0)
 BuildRequires:	pkgconfig(gconf-2.0)
 
 %description
@@ -93,6 +94,7 @@ GTK+ port of the wxWidgets library.
 %patch8 -p1 -b .multiarch
 %patch9 -p0 -b .CVE-2009-3560
 %patch10 -p1 -b .cast~
+%patch11 -p1
 sed -i -e 's/@LDFLAGS@//' wx-config.in
 
 # fix plugin dir for 64-bit
