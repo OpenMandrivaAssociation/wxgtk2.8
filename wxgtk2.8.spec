@@ -1,3 +1,6 @@
+%define _disable_lto 1
+%define _disable_rebuild_configure 1
+
 %define		oname		wxGTK
 %define		majorminor	2.8
 %define		major		%{majorminor}
