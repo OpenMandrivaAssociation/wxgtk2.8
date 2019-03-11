@@ -24,7 +24,6 @@ Source0:	http://prdownloads.sourceforge.net/wxwindows/%{oname}-%{version}.tar.bz
 #gw security patch for bundled expat which we don't use:
 Patch2:		wxGTK-2.8.10-CVE-2009-XXXX.diff
 Patch3:		wxGTK-lX11_linkage_fix.diff
-Patch8:		wxWidgets-2.7.0-multiarch-includes.patch
 #gw security patch for bundled expat which we don't use:
 Patch9:		wxGTK-2.8.8-CVE-2009-3560.diff
 Patch10:	wxGTK-2.8.12-fix-user_data-casting.patch
@@ -94,7 +93,7 @@ GTK+ port of the wxWidgets library.
 %setup -q -n %{oname}-%{version}
 %patch2 -p0 -b .CVE-2009-XXXX
 %patch3 -p1
-%patch8 -p1 -b .multiarch
+#%patch8 -p1 -b .multiarch
 %patch9 -p0 -b .CVE-2009-3560
 %patch10 -p1 -b .cast~
 %patch11 -p1
@@ -112,10 +111,10 @@ find samples demos -name .cvsignore -exec rm {} \;
 # --disable-optimise prevents our $RPM_OPT_FLAGS being overridden
 # (see OPTIMISE in configure).
 # this code dereferences type-punned pointers like there's no tomorrow.
-CFLAGS="%{optflags} -fno-strict-aliasing"
-CXXFLAGS="%{optflags} -fno-strict-aliasing"
-
-%configure2_5x --enable-unicode \
+CFLAGS=" %{optflags} -fno-strict-aliasing"
+CXXFLAGS=" %{optflags} -fno-strict-aliasing -Wno-narrowing"
+export CPPFLAGS="-I/usr/include/gstreamer-1.0"
+%configure --enable-unicode \
 	--without-odbc \
 	--with-opengl \
 	--enable-gtk2 --with-gtk  \
@@ -145,10 +144,10 @@ CXXFLAGS="%{optflags} -fno-strict-aliasing"
 	--enable-mediactrl \
 	--enable-dataviewctrl
 
-%make
+%make_build
 
-%make -C locale allmo
-%make -C contrib
+%make_build -C locale allmo
+%make_build -C contrib
 #gw prepare samples
 cd demos
 make clean
@@ -163,28 +162,17 @@ find demos samples -name Makefile|xargs perl -pi -e 's^SAMPLES_RPATH_FLAG =.*^SA
 
 %install
 %__rm -rf %{buildroot}
-%makeinstall
+%make_install
 %find_lang wxstd
 %find_lang wxmsw
 cat wxmsw.lang >> wxstd.lang
-%makeinstall -C contrib
+%make_install -C contrib
 mv %{buildroot}%{_bindir}/wxrc-%{majorminor} %{buildroot}%{_bindir}/wxrc-%{majorminor}-unicode
 ###
 #gw fix broken symlink
 rm -f %{buildroot}%{_bindir}/{wx-config,wxrc}
 ln -sf %{_libdir}/wx/config/gtk2-unicode-release-%{majorminor} %{buildroot}%{_bindir}/wx-config-unicode
 
-%multiarch_binaries %{buildroot}%{_libdir}/wx/config/gtk2-unicode-release-%{majorminor}
-
-#gw this breaks /usr/bin/wx-config
-mkdir %{buildroot}%{multiarch_bindir}
-ln -s %{_libdir}/wx/config/%{multiarch_platform}/gtk2-unicode-release-%{majorminor} %{buildroot}%{multiarch_bindir}/wx-config-unicode
-%multiarch_includes %{buildroot}%{_libdir}/wx/include/gtk2-unicode-release-%{majorminor}/wx/setup.h
-
-%multiarch_includes %{buildroot}%{_includedir}/wx-%{majorminor}/wx/defs.h
-
-#gw remove Mandriva linker flags
-sed -i -e "s^-Wl,--as-needed^^g" %{buildroot}%{_libdir}/wx/config/%{multiarch_platform}/*
 
 %post -n %{libnameudev}
 update-alternatives --install %{_bindir}/wx-config wx-config %{_libdir}/wx/config/gtk2-unicode-release-%{majorminor} 15 --slave %{_bindir}/wxrc wxrc %{_bindir}/wxrc-%{majorminor}-unicode
@@ -223,7 +211,6 @@ fi
 %doc demos/
 %{_bindir}/wx-config-unicode
 %{_bindir}/wxrc-*unicode
-%{multiarch_bindir}/wx-config-unicode
 %{_includedir}/wx-%{majorminor}/
 %dir %{_libdir}/wx/
 %dir %{_libdir}/wx/include/
@@ -255,9 +242,6 @@ fi
 %{_libdir}/libwx_gtk2u_gl-%{majorminor}.so
 %{_datadir}/aclocal/*
 %{_datadir}/bakefile/
-%{_libdir}/wx/config/multiarch-*/
-%{_libdir}/wx/include/multiarch-*/
-%{_includedir}/multiarch-*/wx-%{majorminor}/wx/defs.h
 
 %files -n %{libglu}
 %{_libdir}/libwx_gtk2u_gl-%{majorminor}.so.*

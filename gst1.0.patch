@@ -1,6 +1,32 @@
---- wxWidgets-3.0.2/configure.in	2014-10-06 22:33:44.000000000 +0100
-+++ wxWidgets-3.0.2.new/configure.in	2014-10-22 15:25:31.594604592 +0100
-@@ -7549,8 +7549,8 @@
+diff --git a/configure b/configure
+index 9c9931c..427ee94 100755
+--- a/configure
++++ b/configure
+@@ -47145,8 +47145,8 @@ if test "$wxUSE_MEDIACTRL" = "yes"; then
+                 if test "$wxUSE_GTK" = 1; then
+         wxUSE_GSTREAMER="no"
+ 
+-                                                                GST_VERSION_MAJOR=0
+-        GST_VERSION_MINOR=10
++                                                                GST_VERSION_MAJOR=1
++        GST_VERSION_MINOR=0
+         GST_VERSION=$GST_VERSION_MAJOR.$GST_VERSION_MINOR
+ 
+         if test "$wxUSE_GSTREAMER8" = "no"; then
+@@ -47229,7 +47229,7 @@ else
+ echo "${ECHO_T}yes" >&6
+ 
+                     wxUSE_GSTREAMER="yes"
+-                    GST_LIBS="$GST_LIBS -lgstinterfaces-$GST_VERSION"
++                    GST_LIBS="$GST_LIBS -lgstvideo-$GST_VERSION"
+ 
+ fi
+         else
+diff --git a/configure.in b/configure.in
+index 1c2fbc9..860d4a7 100644
+--- a/configure.in
++++ b/configure.in
+@@ -7739,8 +7739,8 @@ if test "$wxUSE_MEDIACTRL" = "yes"; then
          dnl So, we first check to see if 0.10 if available - if not we
          dnl try the older 0.8 version
          dnl -------------------------------------------------------------------
@@ -11,7 +37,7 @@
          GST_VERSION=$GST_VERSION_MAJOR.$GST_VERSION_MINOR
  
          if test "$wxUSE_GSTREAMER8" = "no"; then
-@@ -7558,7 +7558,7 @@
+@@ -7748,7 +7748,7 @@ if test "$wxUSE_MEDIACTRL" = "yes"; then
                  [gstreamer-$GST_VERSION gstreamer-plugins-base-$GST_VERSION gconf-2.0],
                  [
                      wxUSE_GSTREAMER="yes"
@@ -20,21 +46,22 @@
                  ],
                  [
                      AC_MSG_WARN([GStreamer 0.10 not available, falling back to 0.8])
---- wxWidgets-3.0.2/src/unix/mediactrl.cpp	2014-10-06 22:33:44.000000000 +0100
-+++ wxWidgets-3.0.2.new/src/unix/mediactrl.cpp	2014-10-22 15:24:44.430608067 +0100
-@@ -20,8 +20,10 @@
+diff --git a/src/unix/mediactrl.cpp b/src/unix/mediactrl.cpp
+index e30e058..5d2482a 100644
+--- a/src/unix/mediactrl.cpp
++++ b/src/unix/mediactrl.cpp
+@@ -21,8 +21,8 @@
  #include <gst/gst.h>                // main gstreamer header
  
  // xoverlay/video stuff, gst-gconf for 0.8
 -#if GST_VERSION_MAJOR > 0 || GST_VERSION_MINOR >= 10
-+#if GST_VERSION_MAJOR == 0 || GST_VERSION_MINOR >= 10
- #   include <gst/interfaces/xoverlay.h>
-+#elif GST_VERSION_MAJOR == 1
+-#   include <gst/interfaces/xoverlay.h>
++#if GST_VERSION_MAJOR == 1
 +#   include <gst/video/videooverlay.h>
  #else
  #   include <gst/xoverlay/xoverlay.h>
  #   include <gst/gconf/gconf.h>        // gstreamer glib configuration
-@@ -203,7 +205,7 @@
+@@ -218,7 +218,7 @@ public:
      double          m_dRate;        // Current playback rate -
                                      // see GetPlaybackRate for notes
      wxLongLong      m_llPausedPos;  // Paused position - see Pause()
@@ -43,7 +70,7 @@
      wxMutex         m_asynclock;    // See "discussion of internals"
      class wxGStreamerMediaEventHandler* m_eventHandler; // see below
  
-@@ -284,7 +286,7 @@
+@@ -284,7 +284,7 @@ static gboolean gtk_window_expose_callback(GtkWidget *widget,
  
      // I've seen this reccommended somewhere...
      // TODO: Is this needed? Maybe it is just cruft...
@@ -52,7 +79,7 @@
      //                              GDK_WINDOW_XWINDOW( window ) );
  
      // If we have actual video.....
-@@ -294,7 +296,7 @@
+@@ -294,7 +294,7 @@ static gboolean gtk_window_expose_callback(GtkWidget *widget,
          // GST Doesn't redraw automatically while paused
          // Plus, the video sometimes doesn't redraw when it looses focus
          // or is painted over so we just tell it to redraw...
@@ -61,7 +88,7 @@
      }
      else
      {
-@@ -334,7 +336,7 @@
+@@ -332,7 +332,7 @@ static gint gtk_window_realize_callback(GtkWidget* theWidget,
      GdkWindow *window = GTK_PIZZA(theWidget)->bin_window;
      wxASSERT(window);
  
@@ -70,7 +97,7 @@
                                  GDK_WINDOW_XWINDOW( window )
                                  );
      g_signal_connect (be->GetControl()->m_wxwindow,
-@@ -538,7 +540,7 @@
+@@ -536,7 +536,7 @@ static GstBusSyncReply gst_bus_sync_callback(GstBus* bus,
      // Pass a non-xwindowid-setting event on to the async handler where it
      // belongs
      if (GST_MESSAGE_TYPE (message) != GST_MESSAGE_ELEMENT ||
@@ -79,7 +106,7 @@
      {
          //
          // NB: Unfortunately, the async callback can be quite
-@@ -552,7 +554,7 @@
+@@ -550,7 +550,7 @@ static GstBusSyncReply gst_bus_sync_callback(GstBus* bus,
              return GST_BUS_DROP;
      }
  
@@ -88,7 +115,7 @@
      be->SetupXOverlay();
      return GST_BUS_DROP; // We handled this message - drop from the queue
  }
-@@ -680,7 +682,7 @@
+@@ -678,7 +678,7 @@ bool wxGStreamerMediaBackend::QueryVideoSizeFromElement(GstElement* element)
  //-----------------------------------------------------------------------------
  bool wxGStreamerMediaBackend::QueryVideoSizeFromPad(GstPad* pad)
  {
@@ -97,16 +124,16 @@
      if ( caps )
      {
          const GstStructure *s = gst_caps_get_structure (caps, 0);
-@@ -739,7 +741,7 @@
+@@ -737,7 +737,7 @@ void wxGStreamerMediaBackend::SetupXOverlay()
          wxASSERT(window);
  #endif
-
+ 
 -    gst_x_overlay_set_xwindow_id( GST_X_OVERLAY(m_xoverlay),
 +    gst_video_overlay_set_window_handle(GST_VIDEO_OVERLAY(m_xoverlay),
  #ifdef __WXGTK__
                          GDK_WINDOW_XWINDOW( window )
  #else
-@@ -885,7 +887,7 @@
+@@ -882,7 +882,7 @@ bool wxGStreamerMediaBackend::TryAudioSink(GstElement* audiosink)
  bool wxGStreamerMediaBackend::TryVideoSink(GstElement* videosink)
  {
      // Check if the video sink either is an xoverlay or might contain one...
@@ -115,7 +142,7 @@
      {
          if(G_IS_OBJECT(videosink))
              g_object_unref(videosink);
-@@ -896,13 +898,13 @@
+@@ -893,13 +893,13 @@ bool wxGStreamerMediaBackend::TryVideoSink(GstElement* videosink)
      // the x overlay enables us to put the video in our control window
      // (i.e. we NEED it!) - also connect to the natural video size change event
      if( GST_IS_BIN(videosink) )
@@ -133,7 +160,7 @@
      {
          g_object_unref(videosink);
          return false;
-@@ -1131,7 +1133,7 @@
+@@ -1102,7 +1102,7 @@ bool wxGStreamerMediaBackend::CreateControl(wxControl* ctrl, wxWindow* parent,
      gst_bus_add_watch (gst_element_get_bus(m_playbin),
                         (GstBusFunc) gst_bus_async_callback, this);
      gst_bus_set_sync_handler(gst_element_get_bus(m_playbin),
@@ -142,7 +169,7 @@
      g_signal_connect(m_playbin, "notify::stream-info",
                       G_CALLBACK(gst_notify_stream_info_callback), this);
  #endif
-@@ -1419,7 +1421,7 @@
+@@ -1374,7 +1374,7 @@ wxLongLong wxGStreamerMediaBackend::GetPosition()
          gint64 pos;
          GstFormat fmtTime = GST_FORMAT_TIME;
  
@@ -151,7 +178,7 @@
              fmtTime != GST_FORMAT_TIME || pos == -1)
              return 0;
          return pos / GST_MSECOND ;
-@@ -1489,7 +1491,7 @@
+@@ -1444,7 +1444,7 @@ wxLongLong wxGStreamerMediaBackend::GetDuration()
      gint64 length;
      GstFormat fmtTime = GST_FORMAT_TIME;
  
@@ -160,7 +187,7 @@
         fmtTime != GST_FORMAT_TIME || length == -1)
          return 0;
      return length / GST_MSECOND ;
-@@ -1512,7 +1514,7 @@
+@@ -1464,7 +1464,7 @@ void wxGStreamerMediaBackend::Move(int x, int y, int w, int h)
  // wxGStreamerMediaBackend::GetVideoSize
  //
  // Returns our cached video size from Load/gst_notify_caps_callback
@@ -169,7 +196,7 @@
  //-----------------------------------------------------------------------------
  wxSize wxGStreamerMediaBackend::GetVideoSize() const
  {
-@@ -1595,7 +1597,7 @@
+@@ -1545,7 +1545,7 @@ wxLongLong wxGStreamerMediaBackend::GetDownloadTotal()
      gint64 length;
      GstFormat fmtBytes = GST_FORMAT_BYTES;
  
@@ -178,25 +205,3 @@
            fmtBytes != GST_FORMAT_BYTES || length == -1)
          return 0;
      return length;
---- wxGTK-2.8.12/configure.old	2015-05-19 22:52:48.443280707 +0100
-+++ wxGTK-2.8.12/configure	2015-05-19 22:53:52.262276626 +0100
-@@ -47145,8 +47145,8 @@
-                 if test "$wxUSE_GTK" = 1; then
-         wxUSE_GSTREAMER="no"
- 
--                                                                GST_VERSION_MAJOR=0
--        GST_VERSION_MINOR=10
-+                                                                GST_VERSION_MAJOR=1
-+        GST_VERSION_MINOR=0
-         GST_VERSION=$GST_VERSION_MAJOR.$GST_VERSION_MINOR
- 
-         if test "$wxUSE_GSTREAMER8" = "no"; then
-@@ -47229,7 +47229,7 @@
- echo "${ECHO_T}yes" >&6
- 
-                     wxUSE_GSTREAMER="yes"
--                    GST_LIBS="$GST_LIBS -lgstinterfaces-$GST_VERSION"
-+                    GST_LIBS="$GST_LIBS -lgstvideo-$GST_VERSION"
- 
- fi
-         else
