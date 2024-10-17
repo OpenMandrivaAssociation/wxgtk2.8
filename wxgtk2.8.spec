@@ -19,7 +19,7 @@ Version:	2.8.12
 Release:	25
 License:	wxWidgets Library Licence
 Group:		System/Libraries
-URL:		http://www.wxwidgets.org/
+URL:		https://www.wxwidgets.org/
 Source0:	http://prdownloads.sourceforge.net/wxwindows/%{oname}-%{version}.tar.bz2
 #gw security patch for bundled expat which we don't use:
 Patch2:		wxGTK-2.8.10-CVE-2009-XXXX.diff
