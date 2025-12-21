@@ -28,6 +28,11 @@ Patch3:		wxGTK-lX11_linkage_fix.diff
 Patch9:		wxGTK-2.8.8-CVE-2009-3560.diff
 Patch10:	wxGTK-2.8.12-fix-user_data-casting.patch
 Patch11:	gst1.0.patch
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	pkgconfig(sdl)
 BuildRequires:	pkgconfig(sm)
 BuildRequires:	pkgconfig(x11)
